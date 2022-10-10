@@ -1,6 +1,7 @@
 """Brute force a protected PDF using passwords from a list file"""
 
 import argparse
+import sys
 import pikepdf
 from tqdm import tqdm
 
@@ -25,6 +26,7 @@ def force_password(filename, passwords):
             # Wrong password so just carry on
             pass
 
+
     return None
 
 
@@ -35,23 +37,23 @@ def main():
         description='Find the password for a PDF file.')
     parser.add_argument('-p', '--password-file',
                         default='wordlist.txt', help='Password List File')
-    parser.add_argument('filename', nargs='*', help='PDF Files')
+    parser.add_argument('pdf_file', nargs='+', help='PDF Files')
     args = parser.parse_args()
 
-    pdf_files = args.filename
+    pdf_files = args.pdf_file
     wordlist = args.password_file
     passwords = load_passwords(wordlist)
 
-    if not pdf_files:
-        raise Exception('No PDF files specified')
-
     for pdf_file in pdf_files:
-        password = force_password(pdf_file, passwords)
+        try:
+            password = force_password(pdf_file, passwords)
 
-        if password is None:
-            print(f'Did not find password for {pdf_file}')
-        else:
-            print(f'Password for {pdf_file} is: {password}')
+            if password is None:
+                print(f'Did not find password for {pdf_file}')
+            else:
+                print(f'Password for {pdf_file} is: {password}')
+        except FileNotFoundError:
+            print(f'Error: Did not find file {pdf_file}', file=sys.stderr)
 
 
 if __name__ == "__main__":
