@@ -26,7 +26,6 @@ def force_password(filename, passwords):
             # Wrong password so just carry on
             pass
 
-
     return None
 
 
