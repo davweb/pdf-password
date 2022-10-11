@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Brute force a protected PDF using passwords from a list file"""
 
 import argparse
