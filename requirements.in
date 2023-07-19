@@ -1,0 +1,6 @@
+autopep8
+mypy
+pikepdf
+pylint
+tqdm
+types-tqdm

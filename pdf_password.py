@@ -7,14 +7,14 @@ import pikepdf
 from tqdm import tqdm
 
 
-def load_passwords(password_list):
+def load_passwords(password_list: str) -> list[str]:
     """Load list of passwords to try"""
 
-    # Load all passwords into memory so we can show progress against list
+    # Load all passwords into memory so we can show progress against list
     return [line.strip() for line in open(password_list, encoding='utf8')]
 
 
-def force_password(filename, passwords):
+def force_password(filename: str, passwords: list[str]) -> str | None:
     """Try the list of passwords against the given PDF file"""
 
     for password in tqdm(passwords, f'Decrypting {filename}'):
@@ -23,14 +23,15 @@ def force_password(filename, passwords):
             with pikepdf.open(filename, password=password) as _:
                 # Password correct and PDF decrypted successfully
                 return password
-        except pikepdf._qpdf.PasswordError:
+        # pylint: disable=protected-access
+        except pikepdf._core.PasswordError:
             # Wrong password so just carry on
             pass
 
     return None
 
 
-def main():
+def main() -> None:
     """Parse arguments and start process"""
 
     parser = argparse.ArgumentParser(
